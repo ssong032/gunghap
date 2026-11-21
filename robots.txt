@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ssong032.github.io/gunghap/sitemap.xml

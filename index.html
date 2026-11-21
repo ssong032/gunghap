@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>찰떡궁합 계산기 - 띠 궁합 · MBTI 궁합 무료로 보기</title>
+  <meta name="description" content="두 사람의 띠와 MBTI만 고르면 궁합 점수와 관계 풀이를 바로 알려 드려요. 육합·삼합·충·원진으로 보는 띠 궁합과 MBTI 케미를 무료로 확인하고 친구에게 공유해 보세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="찰떡궁합 계산기 - 띠 궁합 · MBTI 궁합">
+  <meta property="og:description" content="우리 궁합은 몇 점일까? 띠와 MBTI로 바로 확인해 보세요.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="logo" href="./">찰떡<span>궁합</span></a>
+      <nav class="top"><a href="guide.html">궁합 보는 법</a><a href="about.html">소개</a></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>우리 궁합은 몇 점일까? 💞</h1>
+      <p>띠 또는 MBTI만 고르면 궁합 점수와 풀이를 바로 알려 드려요.</p>
+    </section>
+
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-mode="tti" role="tab" aria-selected="true">🐯 띠 궁합</button>
+        <button class="tab" data-mode="mbti" role="tab" aria-selected="false">🧠 MBTI 궁합</button>
+      </div>
+
+      <div id="panel-tti">
+        <div class="pick">
+          <div><label for="ttiA">나의 띠</label><select id="ttiA"></select></div>
+          <div class="x">×</div>
+          <div><label for="ttiB">상대의 띠</label><select id="ttiB"></select></div>
+        </div>
+        <button class="btn" id="goTti">띠 궁합 보기</button>
+        <p class="hint">※ 띠는 보통 설날(음력 1월 1일) 또는 입춘을 기준으로 바뀌어요. 1~2월생은 <a href="guide.html#tti-year">띠 확인법</a>을 참고하세요.</p>
+      </div>
+
+      <div id="panel-mbti" hidden>
+        <div class="pick">
+          <div><label for="mbtiA">나의 MBTI</label><select id="mbtiA"></select></div>
+          <div class="x">×</div>
+          <div><label for="mbtiB">상대의 MBTI</label><select id="mbtiB"></select></div>
+        </div>
+        <button class="btn" id="goMbti">MBTI 궁합 보기</button>
+        <p class="hint">※ 네 가지 지표(E/I, S/N, T/F, J/P)가 서로 얼마나 잘 맞는지로 계산해요.</p>
+      </div>
+    </section>
+
+    <section class="card" id="result" hidden aria-live="polite">
+      <h2 id="rHeading"></h2>
+      <p class="sub" id="rSub"></p>
+      <div class="scorebox">
+        <div class="score"><span id="rScore"></span><small>점</small></div>
+        <div class="meter"><div id="rMeter"></div></div>
+        <span class="grade" id="rGrade"></span>
+      </div>
+      <p class="rtitle"><span class="badge" id="rBadge"></span> <span id="rTitle"></span></p>
+      <ul id="rLines"></ul>
+      <div class="tip"><b>💡 궁합 처방</b><br><span id="rTip"></span></div>
+      <button class="btn" id="shareBtn">📩 결과 공유하기</button>
+      <p id="shareMsg"></p>
+      <button class="btn ghost" id="retryBtn">다른 궁합 보기</button>
+      <p class="fun">재미로 보는 궁합이에요 🙂</p>
+    </section>
+
+    <section class="card promo">
+      <p>☀️ 매일 아침 6시, <b>띠별 · MBTI 오늘의 운세</b>를 인스타그램에 올려요.</p>
+      <a href="https://www.instagram.com/today_unse_100/" target="_blank" rel="noopener">@today_unse_100 보러 가기 →</a>
+    </section>
+  </main>
+
+  <footer class="site">
+    <a href="guide.html">궁합 보는 법 · FAQ</a>
+    <a href="about.html">소개 · 문의</a>
+    <a href="privacy.html">개인정보처리방침</a>
+    <p>© 2026 찰떡궁합. 모든 결과는 재미를 위한 참고용이에요.</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
