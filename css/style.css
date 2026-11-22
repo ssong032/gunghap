@@ -38,8 +38,8 @@ nav.top a:hover { color: var(--accent); }
 
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin: 16px 0; }
 
-.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--accent-soft); padding: 5px; border-radius: 14px; }
-.tab { border: 0; background: transparent; padding: 11px 0; border-radius: 10px; font: inherit; font-weight: 700; color: var(--muted); cursor: pointer; }
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--accent-soft); padding: 5px; border-radius: 14px; }
+.tab { border: 0; background: transparent; padding: 11px 0; border-radius: 10px; font: inherit; font-size: .9rem; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap; }
 .tab.on { background: var(--card); color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
 
 .pick { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; margin-top: 18px; }
@@ -74,7 +74,35 @@ select {
 .tip { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; margin-top: 12px; font-size: .95rem; }
 .tip b { color: var(--accent); }
 .fun { text-align: center; color: var(--muted); font-size: .85rem; margin: 12px 0 0; }
-#shareMsg { text-align: center; font-size: .88rem; color: var(--g3); margin: 8px 0 0; word-break: break-all; }
+.shareMsg { text-align: center; font-size: .88rem; color: var(--g3); margin: 8px 0 0; word-break: break-all; }
+
+/* 오늘의 사주 */
+.iljin { display: inline-block; margin-top: 10px !important; font-size: .9rem; font-weight: 700; color: var(--accent) !important; background: var(--accent-soft); padding: 4px 12px; border-radius: 99px; }
+.field { margin-top: 18px; }
+.field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 4px; }
+input[type="date"] {
+  width: 100%; padding: 12px 10px; font: inherit; color: var(--text);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 12px; color-scheme: light dark;
+}
+input.err { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.check { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--muted); margin-top: 10px; }
+.daypick { display: flex; gap: 8px; margin-top: 12px; }
+.chip { border: 1px solid var(--line); background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; padding: 6px 16px; border-radius: 99px; cursor: pointer; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.sdate { text-align: center; font-size: .85rem; color: var(--muted); margin: 0 0 4px; }
+.bars { margin: 14px 0; }
+.bar { display: grid; grid-template-columns: 5.5em 1fr 2em; align-items: center; gap: 8px; font-size: .9rem; }
+.bar .meter { margin: 6px 0; height: 8px; }
+.bar b { text-align: right; }
+.parts { margin: 0; }
+.parts dt { font-weight: 800; margin-top: 12px; }
+.parts dd { margin: 2px 0 0; }
+.lucky { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; margin-top: 16px; }
+.lucky div { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; text-align: center; }
+.lucky span { display: block; font-size: .78rem; color: var(--muted); white-space: nowrap; }
+.lucky b { font-size: .92rem; }
+.why { margin-top: 12px; font-size: .9rem; border: 0; }
+.why p { color: var(--muted); }
 
 .promo { text-align: center; }
 .promo p { margin: 0 0 6px; }

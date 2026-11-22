@@ -25,18 +25,101 @@
   $("mbtiA").value = "INFJ";
 
   // 탭
-  let mode = "tti";
   function setMode(m) {
-    mode = m;
     document.querySelectorAll(".tab").forEach((b) => {
       const on = b.dataset.mode === m;
       b.classList.toggle("on", on);
       b.setAttribute("aria-selected", on);
     });
+    $("panel-saju").hidden = m !== "saju";
     $("panel-tti").hidden = m !== "tti";
     $("panel-mbti").hidden = m !== "mbti";
     $("result").hidden = true;
+    $("sajuResult").hidden = true;
   }
+
+  // ---- 오늘의 사주 ----
+  const WD = ["일", "월", "화", "수", "목", "금", "토"];
+  const today = seoulDate(0);
+  const todayGz = ganzhiName(ganzhiIndex(today.y, today.m, today.d));
+  $("iljin").textContent = `오늘 ${today.m}월 ${today.d}일(${WD[today.wd]})은 ${todayLabel(todayGz)}`;
+
+  let dayOff = 0;
+  document.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
+    dayOff = +c.dataset.off;
+    document.querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === c));
+    if (!$("sajuResult").hidden) runSaju();
+  }));
+
+  const store = {
+    get() { try { return JSON.parse(localStorage.getItem("chaltteok_birth") || "null"); } catch (e) { return null; } },
+    set(v) { try { localStorage.setItem("chaltteok_birth", JSON.stringify(v)); } catch (e) { /* 저장 불가 환경 */ } },
+  };
+  const saved = store.get();
+  if (saved && saved.date) { $("birth").value = saved.date; $("lateNight").checked = !!saved.late; }
+
+  function runSaju() {
+    const v = $("birth").value;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+    if (!m || +m[1] < 1920 || +m[1] > 2026) {
+      $("birth").focus();
+      $("birth").classList.add("err");
+      return;
+    }
+    $("birth").classList.remove("err");
+    store.set({ date: v, late: $("lateNight").checked });
+    const t = seoulDate(dayOff);
+    const r = sajuResult({ y: +m[1], m: +m[2], d: +m[3], lateNight: $("lateNight").checked }, t);
+    const avg = Math.round(r.scores.reduce((a, b) => a + b, 0) / r.scores.length);
+    $("sDate").textContent = `${t.y}년 ${t.m}월 ${t.d}일(${WD[t.wd]}) · ${todayLabel(r.td)}`;
+    $("sTitle").textContent = r.title;
+    $("sMe").textContent = `나는 ${r.me.ko}(${r.me.hj})일주 · ${r.dayMaster.nick}`;
+    $("sScore").textContent = avg;
+    $("sMeter").style.width = avg + "%";
+    $("sGod").textContent = `오늘의 기운: ${r.god}`;
+    $("sTotal").textContent = r.total;
+    const names = ["총운", "애정운", "금전운", "일·학업운"];
+    $("sBars").innerHTML = "";
+    r.scores.forEach((s, i) => {
+      const row = document.createElement("div");
+      row.className = "bar";
+      row.innerHTML = `<span></span><div class="meter"><div></div></div><b></b>`;
+      row.children[0].textContent = names[i];
+      row.children[1].firstChild.style.width = s + "%";
+      row.children[2].textContent = s;
+      $("sBars").appendChild(row);
+    });
+    $("sLove").textContent = r.love;
+    $("sMoney").textContent = r.money;
+    $("sWork").textContent = r.work;
+    $("sColor").textContent = r.color;
+    $("sNumber").textContent = r.number;
+    $("sAction").textContent = r.action;
+    $("sWord").textContent = r.word;
+    $("sWhy").textContent =
+      `태어난 날의 천간인 일간이 ${r.me.ko[0]}${r.meElement}(${r.me.hj[0]})이고, ${dayOff ? "내일" : "오늘"} 일진의 천간이 ${r.td.ko[0]}(${r.td.hj[0]})이라 ` +
+      `둘은 '${r.god}' 관계예요. ${r.dayMaster.desc} 행운의 색은 내 일간을 도와주는 오행의 색이에요.`;
+    $("sajuResult").hidden = false;
+    $("sShareMsg").textContent = "";
+    $("sajuResult").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  $("goSaju").addEventListener("click", runSaju);
+
+  $("sShare").addEventListener("click", async () => {
+    // 생년월일은 링크에 넣지 않음
+    const url = location.origin + location.pathname;
+    const text = `오늘 내 사주 운세 ${$("sScore").textContent}점 나왔어! 너도 생년월일로 확인해 봐 👉`;
+    if (navigator.share) {
+      try { await navigator.share({ title: document.title, text, url }); } catch (e) { /* 취소 */ }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text + " " + url);
+      $("sShareMsg").textContent = "링크를 복사했어요. 친구에게 붙여 넣어 보내 주세요!";
+    } catch (e) {
+      $("sShareMsg").textContent = url;
+    }
+  });
   document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
 
   // 결과 표시
