@@ -172,25 +172,52 @@ function todayLabel(gz) {
 
 function clampScore(v) { return Math.max(50, Math.min(98, v)); }
 
-// 생일 + 대상 날짜 → 결과
+// 태어난 시각 → 시지(0=자 … 11=해), 다음 날 일주로 넘어가는지
+// 한국 표준시는 실제 태양시보다 약 30분 빠르므로 30분 보정: 자시 23:30~01:29, 축시 01:30~03:29 …
+function birthHour(time) {
+  const m = /^(\d{1,2}):(\d{2})/.exec(time || "");
+  if (!m) return null;
+  const mins = +m[1] * 60 + +m[2];
+  if (mins < 0 || mins >= 1440) return null;
+  const solar = (mins - 30 + 1440) % 1440;
+  return { branch: Math.floor(((solar + 60) % 1440) / 120), nextDay: mins >= 23 * 60 + 30 };
+}
+
+const HOUR_MOD = {
+  yukhap: { delta: 3, text: "태어난 시의 기운도 오늘과 짝을 이뤄 오후로 갈수록 흐름이 좋아져요." },
+  samhap: { delta: 2, text: "태어난 시의 기운이 오늘과 통해서 마무리가 깔끔한 하루예요." },
+  same: { delta: 1, text: "" },
+  normal: { delta: 0, text: "" },
+  chung: { delta: -2, text: "태어난 시의 기운과 오늘이 부딪혀 저녁엔 무리하지 말고 쉬어 가요." },
+  wonjin: { delta: -1, text: "" },
+};
+
+// 생일(+시각) + 대상 날짜 → 결과
 function sajuResult(birth, target) {
-  const bi = ganzhiIndex(birth.y, birth.m, birth.d) + (birth.lateNight ? 1 : 0);
+  const hour = birthHour(birth.time);
+  const bi = ganzhiIndex(birth.y, birth.m, birth.d) + (hour && hour.nextDay ? 1 : 0);
   const me = ganzhiName(bi % 60);
   const td = ganzhiName(ganzhiIndex(target.y, target.m, target.d));
   const god = tenGod(me.stem, td.stem);
   const g = TEN_GODS[god];
   const relKey = ttiRelation(me.branch, td.branch);
   const mod = BRANCH_MOD[relKey];
-  const seed = dayNumber(target.y, target.m, target.d) * 7 + me.stem * 3;
-  const scores = g.scores.map((s, k) => clampScore(s + mod.delta + (((seed + k * 5) % 7) - 3)));
+  let hourPillar = null, hmod = HOUR_MOD.normal;
+  if (hour) {
+    const hs = ((me.stem % 5) * 2 + hour.branch) % 10; // 일간으로 시간 천간 정하기(갑기일 갑자시 …)
+    hourPillar = { ko: STEMS[hs] + BRANCHES[hour.branch], hj: STEMS_HJ[hs] + BRANCHES_HJ[hour.branch], branchName: BRANCHES[hour.branch] + "시" };
+    hmod = HOUR_MOD[ttiRelation(hour.branch, td.branch)];
+  }
+  const seed = dayNumber(target.y, target.m, target.d) * 7 + me.stem * 3 + (hour ? hour.branch : 0);
+  const scores = g.scores.map((s, k) => clampScore(s + mod.delta + hmod.delta + (((seed + k * 5) % 7) - 3)));
   const supportEl = (Math.floor(me.stem / 2) + 4) % 5; // 나를 생해 주는 오행
   const todayEl = Math.floor(td.stem / 2);
   return {
-    me, td, god,
+    me, td, god, hourPillar,
     dayMaster: DAY_MASTER[me.stem],
     meElement: ELEMENTS[Math.floor(me.stem / 2)],
     title: g.title,
-    total: [g.total, mod.text].filter(Boolean).join(" "),
+    total: [g.total, mod.text, hmod.text].filter(Boolean).join(" "),
     scores,
     love: g.love, money: g.money, work: g.work,
     word: g.word, action: g.action,

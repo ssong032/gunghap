@@ -80,7 +80,9 @@ select {
 .iljin { display: inline-block; margin-top: 10px !important; font-size: .9rem; font-weight: 700; color: var(--accent) !important; background: var(--accent-soft); padding: 4px 12px; border-radius: 99px; }
 .field { margin-top: 18px; }
 .field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 4px; }
-input[type="date"] {
+.timepick { margin-top: 0; }
+input[type="time"] { margin-top: 10px; }
+input[type="date"], input[type="time"] {
   width: 100%; padding: 12px 10px; font: inherit; color: var(--text);
   background: var(--bg); border: 1px solid var(--line); border-radius: 12px; color-scheme: light dark;
 }

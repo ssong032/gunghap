@@ -37,13 +37,23 @@
           <label for="birth">나의 생년월일 (양력)</label>
           <input type="date" id="birth" min="1920-01-01" max="2026-12-31">
         </div>
-        <label class="check"><input type="checkbox" id="lateNight"> 밤 11시~자정 사이에 태어났어요</label>
-        <div class="daypick">
-          <button class="chip on" data-off="0">오늘</button>
-          <button class="chip" data-off="1">내일</button>
+        <div class="field">
+          <label>태어난 시간</label>
+          <div class="daypick timepick">
+            <button type="button" class="chip on" data-time="unknown">모름</button>
+            <button type="button" class="chip" data-time="known">직접 입력</button>
+          </div>
+          <input type="time" id="btime" hidden aria-label="태어난 시간">
+        </div>
+        <div class="field">
+          <label>볼 날짜</label>
+          <div class="daypick datepick">
+            <button type="button" class="chip on" data-off="0">오늘</button>
+            <button type="button" class="chip" data-off="1">내일</button>
+          </div>
         </div>
         <button class="btn" id="goSaju">오늘의 사주 보기</button>
-        <p class="hint">※ 입력한 생년월일은 서버로 보내지 않고, 다음 방문 때 편하도록 이 기기에만 저장돼요. 음력 생일은 양력으로 바꿔서 넣어 주세요.</p>
+        <p class="hint">※ 입력한 생년월일과 시간은 서버로 보내지 않고, 다음 방문 때 편하도록 이 기기에만 저장돼요. 음력 생일은 양력으로 바꿔서 넣어 주세요.</p>
       </div>
 
       <div id="panel-tti" hidden>

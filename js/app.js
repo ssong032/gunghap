@@ -45,10 +45,23 @@
   $("iljin").textContent = `오늘 ${today.m}월 ${today.d}일(${WD[today.wd]})은 ${todayLabel(todayGz)}`;
 
   let dayOff = 0;
-  document.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
+  document.querySelectorAll(".datepick .chip").forEach((c) => c.addEventListener("click", () => {
     dayOff = +c.dataset.off;
-    document.querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === c));
+    document.querySelectorAll(".datepick .chip").forEach((x) => x.classList.toggle("on", x === c));
     if (!$("sajuResult").hidden) runSaju();
+  }));
+
+  // 태어난 시간: 모름 / 직접 입력
+  let timeKnown = false;
+  function setTimeKnown(on) {
+    timeKnown = on;
+    document.querySelectorAll(".timepick .chip").forEach((x) => x.classList.toggle("on", (x.dataset.time === "known") === on));
+    $("btime").hidden = !on;
+    if (!on) $("btime").classList.remove("err");
+  }
+  document.querySelectorAll(".timepick .chip").forEach((c) => c.addEventListener("click", () => {
+    setTimeKnown(c.dataset.time === "known");
+    if (timeKnown) $("btime").focus();
   }));
 
   const store = {
@@ -56,7 +69,10 @@
     set(v) { try { localStorage.setItem("chaltteok_birth", JSON.stringify(v)); } catch (e) { /* 저장 불가 환경 */ } },
   };
   const saved = store.get();
-  if (saved && saved.date) { $("birth").value = saved.date; $("lateNight").checked = !!saved.late; }
+  if (saved && saved.date) {
+    $("birth").value = saved.date;
+    if (saved.time) { $("btime").value = saved.time; setTimeKnown(true); }
+  }
 
   function runSaju() {
     const v = $("birth").value;
@@ -67,13 +83,21 @@
       return;
     }
     $("birth").classList.remove("err");
-    store.set({ date: v, late: $("lateNight").checked });
+    const time = timeKnown ? $("btime").value : "";
+    if (timeKnown && !birthHour(time)) {
+      $("btime").focus();
+      $("btime").classList.add("err");
+      return;
+    }
+    $("btime").classList.remove("err");
+    store.set({ date: v, time });
     const t = seoulDate(dayOff);
-    const r = sajuResult({ y: +m[1], m: +m[2], d: +m[3], lateNight: $("lateNight").checked }, t);
+    const r = sajuResult({ y: +m[1], m: +m[2], d: +m[3], time }, t);
     const avg = Math.round(r.scores.reduce((a, b) => a + b, 0) / r.scores.length);
     $("sDate").textContent = `${t.y}년 ${t.m}월 ${t.d}일(${WD[t.wd]}) · ${todayLabel(r.td)}`;
     $("sTitle").textContent = r.title;
-    $("sMe").textContent = `나는 ${r.me.ko}(${r.me.hj})일주 · ${r.dayMaster.nick}`;
+    $("sMe").textContent = `나는 ${r.me.ko}(${r.me.hj})일주 · ${r.dayMaster.nick}` +
+      (r.hourPillar ? ` · ${r.hourPillar.branchName}(${r.hourPillar.hj}시주)` : "");
     $("sScore").textContent = avg;
     $("sMeter").style.width = avg + "%";
     $("sGod").textContent = `오늘의 기운: ${r.god}`;
@@ -98,7 +122,10 @@
     $("sWord").textContent = r.word;
     $("sWhy").textContent =
       `태어난 날의 천간인 일간이 ${r.me.ko[0]}${r.meElement}(${r.me.hj[0]})이고, ${dayOff ? "내일" : "오늘"} 일진의 천간이 ${r.td.ko[0]}(${r.td.hj[0]})이라 ` +
-      `둘은 '${r.god}' 관계예요. ${r.dayMaster.desc} 행운의 색은 내 일간을 도와주는 오행의 색이에요.`;
+      `둘은 '${r.god}' 관계예요. ${r.dayMaster.desc} 행운의 색은 내 일간을 도와주는 오행의 색이에요.` +
+      (r.hourPillar
+        ? ` 태어난 시간은 ${r.hourPillar.branchName}라서 시주는 ${r.hourPillar.ko}(${r.hourPillar.hj})이고, 시주와 오늘 일진의 관계도 점수에 반영했어요.`
+        : " 태어난 시간을 넣으면 시주까지 반영해서 더 자세히 볼 수 있어요.");
     $("sajuResult").hidden = false;
     $("sShareMsg").textContent = "";
     $("sajuResult").scrollIntoView({ behavior: "smooth", block: "start" });
