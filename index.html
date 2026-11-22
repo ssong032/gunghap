@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>찰떡궁합 - 오늘의 사주 · 띠 궁합 · MBTI 궁합 무료로 보기</title>
-  <meta name="description" content="생년월일만 넣으면 오늘 일진으로 보는 나의 사주 풀이를 매일 무료로 알려 드려요. 육합·삼합·충·원진으로 보는 띠 궁합과 MBTI 케미도 함께 확인해 보세요.">
+  <title>찰떡궁합 - 2027 신년운세 · 이달의 운세 · 오늘의 사주 · 궁합 무료</title>
+  <meta name="description" content="생년월일만 넣으면 2027 정미년 신년운세, 이달의 운세, 오늘의 사주를 연애운·취업운·금전운·건강운까지 무료로 알려 드려요. 육합·삼합·충·원진으로 보는 띠 궁합과 MBTI 케미도 함께 확인해 보세요.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="찰떡궁합 계산기 - 띠 궁합 · MBTI 궁합">
   <meta property="og:description" content="우리 궁합은 몇 점일까? 띠와 MBTI로 바로 확인해 보세요.">
@@ -46,10 +46,12 @@
           <input type="time" id="btime" hidden aria-label="태어난 시간">
         </div>
         <div class="field">
-          <label>볼 날짜</label>
+          <label>볼 기간</label>
           <div class="daypick datepick">
-            <button type="button" class="chip on" data-off="0">오늘</button>
-            <button type="button" class="chip" data-off="1">내일</button>
+            <button type="button" class="chip on" data-p="d0">오늘</button>
+            <button type="button" class="chip" data-p="d1">내일</button>
+            <button type="button" class="chip" data-p="m">이번 달</button>
+            <button type="button" class="chip" data-p="y">신년운세</button>
           </div>
         </div>
         <button class="btn" id="goSaju">오늘의 사주 보기</button>
@@ -88,21 +90,31 @@
       </div>
       <p id="sTotal"></p>
       <div class="bars" id="sBars"></div>
-      <dl class="parts">
-        <dt>💗 애정운</dt><dd id="sLove"></dd>
-        <dt>💰 금전운</dt><dd id="sMoney"></dd>
-        <dt>💼 일·학업운</dt><dd id="sWork"></dd>
-      </dl>
-      <div class="lucky">
-        <div><span>행운 색</span><b id="sColor"></b></div>
-        <div><span>행운 숫자</span><b id="sNumber"></b></div>
-        <div><span>행운 행동</span><b id="sAction"></b></div>
+      <div class="parts" id="sParts"></div>
+      <div class="box caution">
+        <p class="rtitle">⚠️ 이 시기에 조심할 것</p>
+        <ul id="sCaution"></ul>
       </div>
-      <div class="tip"><b>💬 오늘의 한마디</b><br><span id="sWord"></span></div>
+      <div class="box near">
+        <p class="rtitle">🍀 가까이하면 좋은 것</p>
+        <div class="neargrid" id="sNear"></div>
+        <p class="note" id="sNearNote"></p>
+      </div>
+      <div class="lucky" id="sLucky"></div>
+      <div class="days" id="sDays" hidden>
+        <p class="rtitle">🍀 이번 달 나의 행운의 날</p>
+        <ul id="sDaysList"></ul>
+      </div>
+      <div class="flow" id="sFlow" hidden>
+        <p class="rtitle">📈 월별 운세 흐름</p>
+        <div class="fbars" id="sFlowBars"></div>
+        <p class="flegend"><span class="dot best"></span>힘이 실리는 달 <span class="dot low"></span>쉬어 가는 달</p>
+      </div>
+      <div class="tip" id="sWordBox"><b id="sWordTitle">💬 오늘의 한마디</b><br><span id="sWord"></span></div>
       <details class="why"><summary>이 풀이는 어떻게 나왔나요?</summary><p id="sWhy"></p></details>
       <button class="btn" id="sShare">📩 친구에게도 알려 주기</button>
       <p id="sShareMsg" class="shareMsg"></p>
-      <p class="fun">재미로 보는 사주예요 🙂 매일 결과가 바뀌니 내일 또 확인해 보세요!</p>
+      <p class="fun" id="sFun">재미로 보는 사주예요 🙂 매일 결과가 바뀌니 내일 또 확인해 보세요!</p>
     </section>
 
     <section class="card" id="result" hidden aria-live="polite">
@@ -137,6 +149,8 @@
 
   <script src="js/data.js"></script>
   <script src="js/saju.js"></script>
+  <script src="js/period.js"></script>
+  <script src="js/content.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
