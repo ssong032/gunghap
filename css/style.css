@@ -156,3 +156,30 @@ summary { font-weight: 700; cursor: pointer; }
 
 footer.site { margin: 32px 0 24px; text-align: center; font-size: .85rem; color: var(--muted); }
 footer.site a { color: var(--muted); margin: 0 6px; }
+
+/* 띠별 신년운세 페이지 */
+.ny-hero .crumb { font-size: .85rem; color: var(--muted); margin: 0 0 6px; }
+.ny-hero .crumb a { color: var(--muted); }
+.ny-emoji { font-size: 3rem; line-height: 1.1; }
+.ny-h2 { font-size: 1.1rem; margin: 0 0 8px; }
+.ny-tags { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.ny-ages, .ny-tips { list-style: none; padding: 0; margin: 0; }
+.ny-ages li, .ny-tips li { background: var(--bg); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.ny-ages li span { font-size: .82rem; color: var(--muted); margin-left: 6px; }
+.ny-ages li p { margin: 4px 0 0; }
+.ny-tips li b { display: block; font-size: .8rem; color: var(--accent); }
+.ny-cta { text-align: center; }
+.ny-cta .btn { text-decoration: none; }
+.ny-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ny-grid a { display: block; text-align: center; padding: 10px 4px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--text); background: var(--bg); }
+.ny-grid a[aria-current] { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.ny-rank { list-style: none; padding: 0; margin: 12px 0 0; }
+.ny-rank a { display: grid; grid-template-columns: 2.6em 1fr auto; grid-template-areas: "m n s" "m t s"; align-items: center; column-gap: 8px; padding: 10px 12px; margin-top: 8px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; color: var(--text); background: var(--bg); }
+.ny-medal { grid-area: m; font-size: 1.2rem; text-align: center; font-weight: 800; color: var(--muted); }
+.ny-name { grid-area: n; font-weight: 800; }
+.ny-tag { grid-area: t; font-size: .8rem; color: var(--muted); }
+.ny-rank b { grid-area: s; color: var(--accent); }
+.ny-banner { display: block; text-decoration: none; text-align: center; background: var(--accent); color: #fff !important; border-radius: 14px; padding: 12px; font-weight: 800; margin-top: 12px; }
+.ny-banner small { display: block; font-weight: 500; opacity: .9; }
+.usp { font-size: .85rem; color: var(--muted); margin: 8px 0 0 !important; }
+.card > .part:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
