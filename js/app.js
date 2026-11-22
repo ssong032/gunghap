@@ -104,16 +104,19 @@
     const birth = { y: +m[1], m: +m[2], d: +m[3], time };
     const day = (r) => r.dayMaster ? r.dayMaster : DAY_MASTER[r.me.stem];
     const md = (t) => `${t.m}/${t.d}`;
+    // 받침에 맞는 조사 (기→가, 갑→이 / 무→와, 경→과)
+    const jong = (w) => { const c = w.charCodeAt(w.length - 1) - 0xac00; return c >= 0 && c <= 11171 && c % 28 !== 0; };
+    const josa = (w, a, b) => (jong(w) ? a : b);
     let view;
     if (period === "m") {
       const r = monthResult(birth, today, 0);
-      if (!r) return;
+      if (!r) { $("goSaju").textContent = "이번 달 운세는 준비 중이에요"; return; }
       view = {
         r, label: "이달의 기운",
         date: `${r.mp.ko}(${r.mp.hj})월 · ${ELEMENT_ADJ[Math.floor(r.mp.stem / 2)]} ${TTI[r.mp.branch].name}의 달 · ${md(r.mp.start)} ${r.mp.jie} ~ ${md(r.mp.end)}`,
         lucky: [["🎯 이달의 실천", r.action]],
         word: r.word, wordTitle: "💬 이달의 한마디",
-        why: `내 일간 ${r.me.ko[0]}(${r.me.hj[0]})과 이달 월건의 천간 ${r.mp.ko[0]}(${r.mp.hj[0]})이 '${r.god}' 관계예요. 사주에서 한 달은 절기(${r.mp.jie})부터 다음 절기 전날까지라, 이번 달은 ${md(r.mp.start)}~${md(r.mp.end)}이에요. 행운의 날은 이 기간 하루 운세 점수가 가장 높은 날이에요.`,
+        why: `내 일간 ${r.me.ko[0]}(${r.me.hj[0]})${josa(r.me.ko[0], "과", "와")} 이달 월건의 천간 ${r.mp.ko[0]}(${r.mp.hj[0]})${josa(r.mp.ko[0], "이", "가")} '${r.god}' 관계예요. 사주에서 한 달은 절기(${r.mp.jie})부터 다음 절기 전날까지라, 이번 달은 ${md(r.mp.start)}~${md(r.mp.end)}이에요. 행운의 날은 이 기간 하루 운세 점수가 가장 높은 날이에요.`,
       };
     } else if (period === "y") {
       const r = yearResult(birth, FY);
@@ -123,7 +126,7 @@
         lucky: [["🏷️ 올해의 키워드", r.keyword]],
         word: r.months.length ? `가장 힘이 실리는 달은 ${bestMonths(r.months)}이에요. 쉬어 가는 달(${lowMonth(r.months)})에는 무리하지 말고 재충전하세요.` : "",
         wordTitle: "📅 한 해 흐름 한 줄 요약",
-        why: `내 일간 ${r.me.ko[0]}(${r.me.hj[0]})과 ${FY}년 세운의 천간 ${r.yp.ko[0]}(${r.yp.hj[0]})이 '${r.god}' 관계예요. 사주에서 한 해는 1월 1일이 아니라 입춘(2월 4일 무렵)에 바뀌어요. 월별 흐름은 달마다 바뀌는 월건과 내 일간의 관계로 계산했어요.`,
+        why: `내 일간 ${r.me.ko[0]}(${r.me.hj[0]})${josa(r.me.ko[0], "과", "와")} ${FY}년 세운의 천간 ${r.yp.ko[0]}(${r.yp.hj[0]})${josa(r.yp.ko[0], "이", "가")} '${r.god}' 관계예요. 사주에서 한 해는 1월 1일이 아니라 입춘(2월 4일 무렵)에 바뀌어요. 월별 흐름은 달마다 바뀌는 월건과 내 일간의 관계로 계산했어요.`,
       };
     } else {
       const t = seoulDate(period === "d1" ? 1 : 0);
@@ -133,7 +136,7 @@
         date: `${t.y}년 ${t.m}월 ${t.d}일(${WD[t.wd]}) · ${todayLabel(r.td)}`,
         lucky: [["🎯 오늘의 실천", r.action]],
         word: r.word, wordTitle: "💬 오늘의 한마디",
-        why: `태어난 날의 천간인 일간이 ${r.me.ko[0]}${r.meElement}(${r.me.hj[0]})이고, ${period === "d1" ? "내일" : "오늘"} 일진의 천간이 ${r.td.ko[0]}(${r.td.hj[0]})이라 ` +
+        why: `태어난 날의 천간인 일간이 ${r.me.ko[0]}${r.meElement}(${r.me.hj[0]})이고, ${period === "d1" ? "내일" : "오늘"} 일진의 천간이 ${r.td.ko[0]}(${r.td.hj[0]})${josa(r.td.ko[0], "이라", "라")} ` +
           `둘은 '${r.god}' 관계예요. ${r.dayMaster.desc}` +
           (r.hourPillar
             ? ` 태어난 시간은 ${r.hourPillar.branchName}라서 시주는 ${r.hourPillar.ko}(${r.hourPillar.hj})이고, 시주와 오늘 일진의 관계도 점수에 반영했어요.`
